@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Tâches')}"></head>
+<body>
+<header th:replace="~{fragments :: header('tasks')}"></header>
+
+<main class="container">
+    <div class="flash" th:if="${message}" th:text="${message}"></div>
+
+    <section class="stats">
+        <a class="stat" th:href="@{/}" th:classappend="${filter == null} ? 'sel'">
+            <span class="num" th:text="${stats['total']}">0</span><span>Total</span>
+        </a>
+        <a class="stat" th:each="s : ${statuses}" th:href="@{/(status=${s})}"
+           th:classappend="${filter == s} ? 'sel'">
+            <span class="num" th:text="${stats[s.name()]}">0</span><span th:text="${s.label}">x</span>
+        </a>
+    </section>
+
+    <div class="toolbar">
+        <h1 th:text="${filter == null} ? 'Toutes les tâches' : ${filter.label}">Toutes les tâches</h1>
+        <a class="btn primary" th:href="@{/tasks/new}">+ Nouvelle tâche</a>
+    </div>
+
+    <p class="empty" th:if="${#lists.isEmpty(tasks)}">Aucune tâche pour l'instant.</p>
+
+    <ul class="tasks">
+        <li th:each="t : ${tasks}" class="task" th:classappend="${t.status.name() == 'TERMINEE'} ? 'done'">
+            <div class="task-main">
+                <div class="task-head">
+                    <span class="badge" th:classappend="'p-' + ${#strings.toLowerCase(t.priority.name())}"
+                          th:text="${t.priority.label}">Moyenne</span>
+                    <strong th:text="${t.title}">Titre</strong>
+                </div>
+                <p class="desc" th:if="${t.description}" th:text="${t.description}">Description</p>
+                <p class="meta">
+                    <span th:text="${t.status.label}">À faire</span>
+                    <span th:if="${t.dueDate}" th:classappend="${t.overdue} ? 'late'">
+                        · Échéance : <span th:text="${#temporals.format(t.dueDate, 'dd/MM/yyyy')}">01/01/2027</span>
+                        <span th:if="${t.overdue}">(en retard)</span>
+                    </span>
+                </p>
+            </div>
+            <div class="task-actions">
+                <form th:action="@{/tasks/{id}/status(id=${t.id})}" method="post" class="inline">
+                    <select name="value" onchange="this.form.submit()" aria-label="Statut">
+                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"
+                                th:selected="${s == t.status}"></option>
+                    </select>
+                </form>
+                <a class="btn" th:href="@{/tasks/{id}/edit(id=${t.id})}">Modifier</a>
+                <form th:action="@{/tasks/{id}/delete(id=${t.id})}" method="post" class="inline"
+                      onsubmit="return confirm('Supprimer cette tâche ?')">
+                    <button type="submit" class="btn danger">Supprimer</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

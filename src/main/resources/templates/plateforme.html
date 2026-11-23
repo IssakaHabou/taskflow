@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Plateforme')}"></head>
+<body>
+<header th:replace="~{fragments :: header('platform')}"></header>
+
+<main class="container narrow">
+    <h1>Environnement d'exécution</h1>
+    <p class="lead">
+        Ces informations sont lues en direct sur le serveur. Sur un <strong>PaaS</strong>, le système
+        d'exploitation, la JVM et le réseau sont fournis et gérés par la plateforme (Cloud Clusters) :
+        le développeur ne livre que l'application (<code>taskflow.jar</code>).
+    </p>
+
+    <table class="card info">
+        <tr th:each="e : ${info}">
+            <th th:text="${e.key}">Clé</th>
+            <td th:text="${e.value}">Valeur</td>
+        </tr>
+    </table>
+
+    <h2>Points d'accès utiles</h2>
+    <ul class="links">
+        <li><a th:href="@{/api/tasks}" target="_blank"><code>GET /api/tasks</code></a> — liste des tâches (JSON)</li>
+        <li><a th:href="@{/api/tasks/stats}" target="_blank"><code>GET /api/tasks/stats</code></a> — statistiques</li>
+        <li><a th:href="@{/actuator/health}" target="_blank"><code>GET /actuator/health</code></a> — état de santé (application + base)</li>
+        <li><a th:href="@{/actuator/info}" target="_blank"><code>GET /actuator/info</code></a> — informations de build, Java, OS</li>
+    </ul>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' · TaskFlow'">TaskFlow</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:fragment="header(active)" class="topbar">
+    <a class="brand" th:href="@{/}"><span class="logo">TF</span> TaskFlow</a>
+    <nav>
+        <a th:href="@{/}" th:classappend="${active == 'tasks'} ? 'on'">Tâches</a>
+        <a th:href="@{/tasks/new}" th:classappend="${active == 'new'} ? 'on'">Nouvelle tâche</a>
+        <a th:href="@{/plateforme}" th:classappend="${active == 'platform'} ? 'on'">Plateforme</a>
+        <a th:href="@{/actuator/health}" target="_blank">Santé</a>
+    </nav>
+</header>
+
+<footer th:fragment="footer" class="footer">
+    TaskFlow · Spring Boot sur PaaS Cloud Clusters · TP Cloud Computing &amp; Virtualisation — INP-HB
+</footer>
+</body>
+</html>

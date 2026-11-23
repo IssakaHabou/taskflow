@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(${task.id == null} ? 'Nouvelle tâche' : 'Modifier')}"></head>
+<body>
+<header th:replace="~{fragments :: header(${task.id == null} ? 'new' : 'tasks')}"></header>
+
+<main class="container narrow">
+    <h1 th:text="${task.id == null} ? 'Nouvelle tâche' : 'Modifier la tâche'">Nouvelle tâche</h1>
+
+    <form th:action="@{/tasks}" th:object="${task}" method="post" class="card form">
+        <input type="hidden" th:field="*{id}">
+
+        <label>Titre *
+            <input type="text" th:field="*{title}" maxlength="120" required>
+            <small class="err" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></small>
+        </label>
+
+        <label>Description
+            <textarea th:field="*{description}" rows="4" maxlength="1000"></textarea>
+            <small class="err" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></small>
+        </label>
+
+        <div class="row">
+            <label>Statut
+                <select th:field="*{status}">
+                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"></option>
+                </select>
+            </label>
+            <label>Priorité
+                <select th:field="*{priority}">
+                    <option th:each="p : ${priorities}" th:value="${p}" th:text="${p.label}"></option>
+                </select>
+            </label>
+            <label>Échéance
+                <input type="date" th:field="*{dueDate}">
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <a class="btn" th:href="@{/}">Annuler</a>
+            <button type="submit" class="btn primary">Enregistrer</button>
+        </div>
+    </form>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>
